@@ -1,0 +1,256 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[ngerman]{babel} 
+
+\title{Abgabe Computergestütze Metohden}
+\author{Adam Djabrailov [4349521], Eren Askin [4361269], Sinan Yilmaz [4358904]}
+\date{2. Februar 2025}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Aufgabe 3}
+
+\subsection{GitHub}
+
+Hier ist unser GitHub repository für den RStudio Code und LaTeX Code. \url{https://github.com/221Adam/AbgabeCOMET4349521}
+
+\subsection{Aufgabe 3.1}
+
+    In dieser Aufgabe musste man die Wahrscheinlichkeit des Falles simulieren, wenn aus 8 Personen beim Wichteln niemand das gleiche Geschenk erhält. Durch eine Simulation ähnlich wie aus dem Skript ist das möglich.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1.5\linewidth]{F1.PNG}
+        \caption{Caption}
+        \label{fig:enter-label}
+    \end{figure}
+
+    Hier sind die Outputs der Simulation
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1.4\linewidth]{F2}
+        \caption{Caption}
+        \label{fig:enter-label}
+    \end{figure}
+
+\subsection{Aufgabe 3.2}
+
+    Danach musste man die Simulation in eine Funktion umändern. Es gibt möglicherweise viele verschiedene Lösungsansätze, aber wir haben es wie folgt gelöst. Die Anmerkungen im Code erklären das auch genug. Dazu gibt es auch den Output der Funktion.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1.5\linewidth]{F3}
+        \caption{Caption}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1.5\linewidth]{F4}
+        \caption{Caption}
+        \label{fig:enter-label}
+    \end{figure}
+
+\subsection{Aufgabe 3.3}
+
+    Man kann bei den Abbildungen sehen, wie wir die Aufgabe gelöst haben.
+
+\subsection{Aufgabe 3.4}
+
+    Hier haben wir 4 simple Testfälle genommen für unsere Funktion.
+
+    \begin{enumerate}
+        \item Erwarteter Wert gleich 1
+        \item Erwartete Länge gleich 1
+        \item Erwarteter Wert größer gleich 0
+        \item Erwarteter Wert kleiner gleich 1
+    \end{enumerate}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=1.3\linewidth]{F5}
+        \caption{Caption}
+        \label{fig:enter-label}
+    \end{figure}
+
+\newpage
+
+\subsection{Aufgabe 3.5}
+
+    Diese Aufgabe ist im Vergleich zu den anderen viel umfassender. Ab hier werden wir nur den Code und nicht Output vom Code in LaTex vorzeigen, da es ansonsten viel zu viel von den Abbildungen wird, also haben sie bitte Verständnis. Trotzdem wird der ganze Code ihnen zur Verfügung gestellt, um halt zu prüfen.
+
+\newpage
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1\linewidth]{F6.PNG}
+        \caption{Caption}
+        \label{fig:enter-label}
+    \end{figure}
+
+\newpage
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1\linewidth]{F7.PNG}
+        \caption{Caption}
+        \label{fig:enter-label}
+    \end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.6\linewidth]{F8.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{F9}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+
+Hier erkläre ich was wir alles gemacht haben in dieser Aufgabe. Zu aller erste natürlich $setwd$ für set working directory (Arbeitsordner), damit wir unseren Fahrradverleihdatensatz benutzen können, welchen ich in $DATEN.csv$ umbenannt, ums etwas unkomplizierter zu machen. Danach mit $subset$ aufgeteilt und direkt guckt wo es überall $NA$ gibt. Es gab welche, weswegen wir Imputationsverfahren benutzt haben. Bei Werten wie den Tagen oder Monat musste man einfach nur den Datensatz checken und gucken was fehlt. Wenn dort ein $NA$ bei einer Reihe von Einsen ist, dann ist offentsichtlich was fehlt. Bei dem Rest haben wir den Median gebildet und eingesetzt. Das gleiche Imputationsverfahren haben wir dann auch bei den Ausreißern benutzt wie -1. Man hätte auch eliminieren können, aber wir fanden es so besser für die spätere Graphenbildung. Nach den ganzen Imputationsverfahren haben wir auch geprüft, ob es noch $NA$ oder Ausreißer gibt. Bei uns wurden die meisten Fahrräder im Oktober ausgeliehen, undzwar 2324 Fahrräder. Die Daten haben wir auch von Fahrenheit zu Celsius transformiert mit der Formel $C=(F-32)*5/9$.
+
+\section{Aufgabe 4}
+
+\subsection{Aufgabe 4.1}
+
+Dinge, die den Grundlagen der Datenvisualiserung widersprechen
+
+ Die Grafik besitzt keine x oder y Achsenbeschriftung und nichtmal eine Überschrift. Die y-Achse wurde durch eine gestrichelte Linie ersetzt, was für einen Vergleich kontraproduktiv ist. Die Grafik ist unübersichtlich, unintuitiv und nicht selbsterklärend, aufgrund von vielen unnötigen Dingen wie z.B. den Texten, den Smileys und der gestrichelten Linie. Diese unnötigen Dinge könnte man als Chart junk sehen. Die Farbauswahl besteht aus Rot, gestricheltem Rot und verschiedenen Grünsorten, was für eine farbenblinde Person sehr schwierig zu unterscheiden wäre, vor allem beim Grün.
+
+\newpage
+
+\subsection{Aufgabe 4.2}
+
+Als erstes müssen wir ein paar Packete runterladen. Danach kann man mit den Grafiken beginnen. Sie sind sehr simpel zu erstellen. Man stellt sie aus $ggplot,geompoint,ggtitle,xlab$ und $ylab$ zusammen. Dabei haben wir sie zu Grafik 1-4 zugeordnet, um später einen Grid davon zu erstellen. Dann müssen wir auch nicht so viele Fotos machen und in LaTex importieren
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.2\linewidth]{F10.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.3\linewidth]{F11.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.3\linewidth]{F12.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+
+\subsection{Aufgabe 4.3}
+
+Hier haben wir das gleiche wie in der vorherigen Aufgabe gemacht nur halt mit $precipitation==0$ und $precipitation>0$
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.2\linewidth]{F13.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.2\linewidth]{F14.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+
+\subsection{Aufgabe 4.4}
+
+Bei dieser Aufgabe haben wir hauptsächlich Histogramme benutzt, da wir Boxplots als Verteilung nicht so Vorteilhaft wie Histogramme sehen. Hier macht man grundsätzlich das gleiche wie mit den Scatterplots, hier ist aber der Unterschied, dass man anstatt $geompoint$ $geomhist$ schreibt (Mit Unterstrich halt).
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.2\linewidth]{F15.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.3\linewidth]{F16.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{Aufgabe 4.5}
+
+Hier haben wir nicht gewusste, ob das Histogramm mit dabei sein muss bei den stetigen Verteilungen oder nicht, deswegen haben wir beides reingepackt und vorher auch den Fahrradverleih Datensatz erweitert, um die Grafiken zu erstellen. Wir mussten es so machen, dass man die Daten oder $col/fill$ den Jahreszeiten zuordnet. Wir haben eine neue Datenreihe erstellt. Die Jahreszeiten bei uns gehen vom 1.12 zum 1.3 zum 1.6 zum 1.9 zum 1.12 und in den Abbildungen haben wir das mit den Tagen zugeordnet. Hinter den Kulissen auch bisschen gerechnet, welcher Tag jetzt der 1.3 ist, wenn man bloß mit rohen Tagen rechnet und ohne Datum. Mit length kann man auch sehen, dass es insgesamt 365 Tage sind.
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.3\linewidth]{Rest1.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.2\linewidth]{Rest2.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{Aufgabe 4.6}
+
+Bei der letzten Aufgabe haben wir uns wie immer an den Code im Skript gehalten und einfach übertragen. Ein bisschen haben wir bei der Größe geändert und unsere Daten halt übertragen.
+
+\newpage
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.2\linewidth]{Rest3.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.2\linewidth]{Rest4.PNG}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\end{document}
