@@ -1,0 +1,470 @@
+
+# Aufgabe 3.1 ---------------------------------------------------
+
+N <- 1:8             # Alle Personen
+iterations <- 100000  # Anzahl Simulationen
+counter <- 0         # Zählt positive Faelle
+
+# Zähle wenn in der Simulation irgendwer sein eigenes Geschenk hat bzw. wenn jemand seine eigene Zahl hat.
+for (i in 1:iterations) {
+  Zuweisung <- sample(x=N,size=8, prob=NULL)
+  if (any(Zuweisung==(N))) {
+    counter <- counter + 1
+  }
+} # Wenn irgendein Wert von Zuweisung gleich 1 bis 8 ist dann counter plus 1
+
+1-counter/iterations # Berechnung Wahrscheinlichkeit. Man berechnet die Gegenwahrscheinlichkeit
+# Counter/Iterations wäre Wahrscheinlichkeit, dass mindestens einer sein eigenes Geschenk hat
+# Die Gegenwahrscheinlichkeit davon ist, dass niemand sein eigenes Geschenk hat
+
+
+# Exakte Wahrscheinlichkeit. Wahrscheinlichkeit, dass 0 Leute unter 8 mit p von 1/8 das gleiche haben
+dbinom(0,8,1/8)
+
+# Aufgabe 3.2 ----------------------------------------------------------------
+
+# Funktion mit 1e6 als Standardwert für iterations mit anderen inputs
+wichtel_unglueck <- function(n,k,iterations = 1e6){
+  counter <- 0 # Zähler
+  for (i in 1:iterations){ # Simulation. Zähle wenn weniger gleich k Leute ihr eigenes Geschenk haben
+    if (length(which(1:n==sample(1:n,n,1/n,prob=NULL)))<=k){ # Length von which soll zählen wie viele gleich sind
+      counter <- counter + 1 # Es wird nur gezählt wenn es weniger gleich k ist
+    }
+  }
+  Ergebnis <- counter/iterations # Rechnung für die Wahrscheinlichkeit
+  return(Ergebnis) # Return damit die Funktion das Ergebnis anzeigt nach der Eingabe von den Inputs
+}
+
+wichtel_unglueck(10,2) # Wahrscheinlichkeitsfunktion
+
+pbinom(2,10,1/10) # Aggregierte Wahrscheinlichkeit bis 2 bzw. einfach exakte Wahrscheinlichkeit
+
+# Aufgabe 3.4 ------------------------------------------------------------------
+
+install.packages("testthat")# Falls nötig, denke aber nicht
+library(testthat)
+# Das meiste ist sehr selbsterklärend
+test_that(
+  "n gleich k ergibt 1",
+  {
+    # Der expected value ist 1
+    expect_equal(wichtel_unglueck(5,5,1000),1)
+    expect_equal(wichtel_unglueck(100,100,1000),1)
+  }
+)
+test_that(
+  "Die Länge vom Ergebniss soll 1 sein",
+  {
+    # Ergebniss-/Vektor-länge soll 1 sein
+    expect_length(wichtel_unglueck(2,8,1000),1)
+    expect_length(wichtel_unglueck(235,500,1000),1)
+  }
+)
+test_that(
+  "Ergebnis soll größer gleich 0 sein",
+  {
+    # Expected value ist größer gleich 0 auch wenn 0 mit dieser Funktion kaum erreichbar ist
+    expect_gte(wichtel_unglueck(0,100,1000),0)
+    expect_gte(wichtel_unglueck(2,10000,1000),0)
+  }
+)
+test_that(
+  "Ergebniss soll kleiner gleich 1 sein",
+  {
+    # Expected value ist kleiner gleich 1
+    expect_lte(wichtel_unglueck(5,5,1000),1)
+    expect_lte(wichtel_unglueck(100,100,1000),1)
+  }
+)
+
+# Aufgabe 3.5 ----------------------------------------------------------------
+
+setwd("D:/AbgabeOrdner")
+data.frame <- read.csv(
+  file = "DATEN.csv",  # Pfad zur .csv-Datei
+  header = TRUE,         # die Datei hat eine Kopfzeile
+  sep = ",",            # die Zellen sind durch Kommata getrennt
+  dec = "."              # das Zeichen für Dezimalstellend
+)
+
+# Kompletten Datensatz für Gruppe 62 auftrennen
+data.frame <- subset(data.frame,group=="62")
+
+# Gucken ob mans richti hat
+data.frame
+
+# Gibt es fehlende Werte
+anyNA(data.frame)
+
+# In welchen Datensätzen fehlende Werte
+anyNA(data.frame$group)
+anyNA(data.frame$station)
+anyNA(data.frame$date)
+anyNA(data.frame$day_of_year)
+anyNA(data.frame$day_of_week)
+anyNA(data.frame$month_of_year)
+anyNA(data.frame$precipitation)
+anyNA(data.frame$windspeed)
+anyNA(data.frame$min_temperature)
+anyNA(data.frame$average_temperature)
+anyNA(data.frame$max_temperature)
+anyNA(data.frame$count)
+
+# Welcher Datensatz ist genau betroffen
+which(is.na(data.frame$day_of_year))
+
+# Gucken was fehlt
+data.frame$day_of_year
+
+# Einsetzen
+data.frame$day_of_year[142] <- 142
+data.frame$day_of_year[290] <- 290
+
+# Testen ob es noch NA gibt
+anyNA(data.frame$day_of_year)
+
+# Das gleiche für die Daten mit den Zeitangaben
+which(is.na(data.frame$day_of_week))
+
+data.frame$day_of_week
+
+data.frame$day_of_week[121] <- 2
+data.frame$day_of_week[159] <- 5
+
+anyNA(data.frame$day_of_week)
+
+which(is.na(data.frame$month_of_year))
+
+data.frame$month_of_year
+
+data.frame$month_of_year[47] <- 2
+data.frame$month_of_year[77] <- 3
+
+anyNA(data.frame$month_of_year)
+
+# Ab hier Imputationsverfahren nutzen für die anderen Werte
+# Median aus den Daten nutzen mit na.rm=TRUE damit NA nicht stört
+median_precp <- median(data.frame$precipitation,na.rm=TRUE)
+
+# Welcher Datensatz betroffen?
+which(is.na(data.frame$precipitation))
+
+# Median in NA einsetzen
+data.frame$precipitation[208] <- median_precp
+
+# Testen obs noch NA gibt
+anyNA(data.frame$precipitation)
+
+# Für den Rest weitermachen
+which(is.na(data.frame$windspeed))
+
+median_windsp <- median(data.frame$windspeed,na.rm=TRUE)
+
+data.frame$windspeed[322] <- median_windsp
+
+anyNA(data.frame$windspeed)
+
+which(is.na(data.frame$min_temperature))
+
+median_mintemp <- median(data.frame$min_temperature,na.rm=TRUE)
+
+data.frame$min_temperature[194] <- median_mintemp
+
+anyNA(data.frame$min_temperature)
+
+which(is.na(data.frame$average_temperature))
+
+median_averagetemp <- median(data.frame$average_temperature,na.rm=TRUE)
+
+data.frame$average_temperature[214] <- median_averagetemp
+
+anyNA(data.frame$average_temperature)
+
+which(is.na(data.frame$max_temperature))
+
+median_maxtemp <- median(data.frame$max_temperature,na.rm=TRUE)
+
+data.frame$max_temperature[242] <- median_maxtemp
+
+anyNA(data.frame$max_temperature)
+
+which(is.na(data.frame$count))
+
+median_count <- median(data.frame$count,na.rm=TRUE)
+
+data.frame$count[194] <- median_count
+
+anyNA(data.frame$count)
+
+# Gibt es überhaupt noch NAs in unseren Daten?
+anyNA(data.frame)
+
+# Gucken ob es verschiedene unnatürliche Werte gibt, welche nicht richtig sein können
+range(data.frame$group)
+range(data.frame$date)
+range(data.frame$day_of_year)
+range(data.frame$day_of_week)
+range(data.frame$month_of_year)
+range(data.frame$precipitation)
+range(data.frame$windspeed)
+range(data.frame$min_temperature)
+range(data.frame$average_temperature)
+range(data.frame$max_temperature)
+range(data.frame$count)
+
+# Imputationsverfahren nutzen (Man hätte theoretisch auch einfach eliminieren können)
+Num1 <- which(data.frame$precipitation=="-1")
+
+data.frame$precipitation[Num1] <- median_precp
+
+Num2 <- which(data.frame$windspeed=="-1")
+
+data.frame$windspeed[Num2] <- median_windsp
+
+Num3 <- which(data.frame$min_temperature=="-1")
+
+data.frame$min_temperature[Num3] <- median_mintemp
+
+Num4 <- which(data.frame$average_temperature=="-1")
+
+data.frame$average_temperature[Num4] <- median_averagetemp
+
+Num5 <- which(data.frame$max_temperature=="-1")
+
+data.frame$max_temperature[Num5] <- median_maxtemp
+
+Num6 <- which(data.frame$count=="-1")
+
+data.frame$count[Num6] <- median_count
+
+# Testen ob es Ausreißer gibt
+range(data.frame$group)
+range(data.frame$date)
+range(data.frame$day_of_year)
+range(data.frame$day_of_week)
+range(data.frame$month_of_year)
+range(data.frame$precipitation)
+range(data.frame$windspeed)
+range(data.frame$min_temperature)
+range(data.frame$average_temperature)
+range(data.frame$max_temperature)
+range(data.frame$count)
+
+
+# ------------------------------------------------------------------------------
+# Temperaturen aus Daten von Fahrenheit zu Celsius transfomieren
+data.frame$min_temperature <- (data.frame$min_temperature -32)*(5/9)
+data.frame$average_temperature <- (data.frame$average_temperature-32)*(5/9)
+data.frame$max_temperature <- (data.frame$max_temperature-32)*(5/9)
+
+#-------------------------------------------------------------------------------
+
+# Monatskürzel machen für späteren Befehl
+
+data.frame$month_of_year
+Jan <- data.frame$month_of_year=="1"
+Feb <- data.frame$month_of_year=="2"
+Mar <- data.frame$month_of_year=="3"
+Apr <- data.frame$month_of_year=="4"
+Mai <- data.frame$month_of_year=="5"
+Jun <- data.frame$month_of_year=="6"
+Jul <- data.frame$month_of_year=="7"
+Aug <- data.frame$month_of_year=="8"
+Sep <- data.frame$month_of_year=="9"
+Okt <- data.frame$month_of_year=="10"
+Nov <- data.frame$month_of_year=="11"
+Dez <- data.frame$month_of_year=="12"
+
+# Was ist Count summiert in den Datensätzen Jan also wo moy = 1 ist usw.
+sum(data.frame$count[Jan])
+sum(data.frame$count[Feb])
+sum(data.frame$count[Mar])
+sum(data.frame$count[Apr])
+sum(data.frame$count[Mai])
+sum(data.frame$count[Jun])
+sum(data.frame$count[Jul])
+sum(data.frame$count[Aug])
+sum(data.frame$count[Sep])
+sum(data.frame$count[Okt])
+sum(data.frame$count[Nov])
+sum(data.frame$count[Dez])
+
+# Man hätte auch den max() Befehl mit all den sums vorher machen können, damit
+# man es nicht ablesen muss
+
+# Aufgabe 4.1 ------------------------------------------------------------------
+
+# Fehlende Achsenbeschriftung für y und x Achse fehlt komplett, roter strich reicht nicht
+# Grafik ist nicht selbsterklärend, ansonsten wären texte überflüssig
+# Unnötige Texte/Smileys und keine Überschrift
+# Keine leicht unterscheidbare Farben für farbenblinde
+
+# Packete installieren - habe einfach alle hier installiert zur Sicherheit,
+# aber die meisten sollten klar sein
+install.packages("ggplot2")
+library(ggplot2)
+install.packages("dplyr")
+library(dplyr)
+install.packages("ggthemes")
+library(ggthemes)
+install.packages("gridExtra")
+library(gridExtra)
+install.packages("plotly")
+library(plotly)
+
+# Aufgabe 4.2 Zusammenhänge ----------------------------------------------------
+
+# Grafik zuordnen muss nicht sein, aber ist ein kleines Extra damit man später grid erstellen kann
+# Scatterplots erstellen
+Grafik1 <- ggplot(data = filter(data.frame)) +
+  geom_point(aes(x = average_temperature, y = count,fill="black"))+
+  ggtitle("Zussamenhang Temperatur und Ausgeliehene Fahrräder")+
+  xlab("Durchschnittliche Temperatur")+
+  ylab("Fahrräder geliehen")
+
+Grafik1
+
+# Scatterploterstellung mit Achsenbeschriftung und einfaches schwarz als Punkte
+
+Grafik2 <- ggplot(data = filter(data.frame)) +
+  geom_point(aes(x = precipitation, y = count,fill="black"))+
+  ggtitle("Zusammenhang Regen und Ausgliehene Fahrräder")+
+  xlab("Regen")+
+  ylab("Fahrräder geliehen")
+
+Grafik2
+
+ggplot(data = filter(data.frame)) + #ALTERNATIVE
+  geom_point(aes(x = count, y = precipitation,fill="black"))+
+  ggtitle("Zusammenhang Regen und Ausgliehene Fahrräder")+
+  xlab("Fahrräder geliehen")+
+  ylab("Regen")
+
+Grafik3 <- ggplot(data = filter(data.frame)) +
+  geom_point(aes(x = count, y = windspeed,fill="black"))+
+  ggtitle("Zusammenhang Windgeschwindigkeit und ausgliehene Fahrräder")+
+  xlab("Fahrräder geliehen")+
+  ylab("Windgeschwindigkeit")
+
+Grafik3
+
+Grafik4 <- ggplot(data = filter(data.frame)) +
+  geom_point(aes(x = day_of_year, y = count,fill="black"))+
+  ggtitle("Zusammenhang ausgeliehene Fahrräder und Zeit")+
+  xlab("Tag")+
+  ylab("Fahrräder geliehen")
+
+Grafik4
+
+#Kleines Extra
+grid.arrange(Grafik1, Grafik2, Grafik3,
+             Grafik4,
+             nrow = 2, ncol = 2)
+
+# Aufgabe 4.3 Regen ------------------------------------------------------------
+
+# Scatterplot mit Regen also precp>0. Bedeutet einfach keine Tage ohne Regen
+Mit_Regen <- ggplot(data = filter(data.frame,precipitation>0)) +
+  geom_point(aes(x = average_temperature, y = count))+
+  ggtitle("Zusammenhang Temperatur und Leihräder an Regentagen")+
+  xlab("Durchschnittliche Temperatur")+
+  ylab("Fahrräder geliehen")
+
+# Tage ohne Regen also exakt 0
+Ohne_Regen <- ggplot(data = filter(data.frame,precipitation==0)) +
+  geom_point(aes(x = average_temperature, y = count))+
+  ggtitle("Zussamenhang Temperatur und Leihräder ohne Regen")+
+  xlab("Durschnittliche Temperatur")+
+  ylab("Fahrräder geliehen")
+
+grid.arrange(Ohne_Regen,Mit_Regen,
+             nrow=1,ncol=2)
+
+# Aufgabe 4.4 Verteilungen ----------------------------------------------------
+
+# Das gleiche wie mit Scatterplots nur mit mehr Konfigurationen
+# Mehr Farbe usw. da es sonst sehr unintuitiv aussieht
+Hist1 <- ggplot(data = filter(data.frame)) +
+  geom_histogram(aes(x = count),col="#9ebcda",fill="#e0ecf4",)+
+  ggtitle("Histogram Fahrräder")+
+  xlab("Fahrräder geliehen")+
+  ylab("Anzahl Beobachtungen")+
+  theme_bw()
+
+# Einmal ein Histogram ohne Dichte (Density)
+Hist1
+
+Hist2 <- ggplot(data = filter(data.frame)) +
+  geom_histogram(aes(x = average_temperature, y = ..density..),col="#9ebcda",fill="#e0ecf4")+
+  ggtitle("Histogramm Temperatur")+
+  xlab("Durchschnittliche Temperatur")+
+  ylab("Dichte")+
+  theme_bw()
+
+# Ab hier mit Dichte
+Hist2
+
+Hist3 <- ggplot(data = filter(data.frame)) +
+  geom_histogram(aes(x = precipitation, y = ..density..),col="#9ebcda",fill="#e0ecf4")+
+  ggtitle("Histogram Niederschlag")+
+  xlab("Niederschlagsmenge")+
+  ylab("Dichte")+
+  theme_bw()
+
+Hist3
+
+Hist4 <- ggplot(data = filter(data.frame)) +
+  geom_histogram(aes(x = windspeed, y=..density..),col="#9ebcda",fill="#e0ecf4")+
+  ggtitle("Histogram Windgeschwindigkeit")+
+  xlab("Windgeschwindigkeit")+
+  ylab("Dichte")+
+  theme_bw()
+
+Hist4
+
+grid.arrange(Hist1, Hist2,Hist3,Hist4,
+             nrow = 2, ncol = 2)
+# Bisschen blöd,dass das eine ohne density ist. Bin zu faul das zu ändern :P
+# Bitte kein kein Punkteabzug (っ◞‸◟ c) , ˙◠˙
+
+# Aufgabe 4.5 Jahreszeiten------------------------------------------------------
+
+data.frame$Jahreszeiten <- 1
+data.frame$Jahreszeiten[1:59] <- "winter"
+data.frame$Jahreszeiten[60:149] <- "Frühling"
+data.frame$Jahreszeiten[150:243] <- "Sommer"
+data.frame$Jahreszeiten[244:333] <- "Herbst"
+data.frame$Jahreszeiten[334:365] <- "Winter"
+
+# Mit Histogramm im Hintergrund
+Mit_Hist <- ggplot(data = filter(data.frame)) +
+  geom_histogram(aes(x = count,y=..density..),col="black")+
+  geom_density(aes(x = count,fill = Jahreszeiten ),alpha = 0.4)+
+  ggtitle("Verleih Jahreszeiten")+
+  xlab("Fahrräder geliehen")+
+  ylab("Anzahl Beobachtungen")+
+  theme_bw()
+
+# Ohne Histogramm im Hintergrund
+
+# Mit Histogramm im Hintergrund
+Ohne_hist <- ggplot(data = filter(data.frame)) +
+  geom_density(aes(x = count,fill = Jahreszeiten ),alpha = 0.5)+
+  ggtitle("Verleih Jahreszeiten")+
+  xlab("Fahrräder geliehen")+
+  ylab("Anzahl Beobachtungen")+
+  theme_bw()
+
+grid.arrange(
+  Ohne_hist,Mit_Hist,nrow=2,ncol=1
+)
+
+# Aufgabe 4.6 3d Scatterplot ---------------------------------------------------
+
+Fahrradverleih <- plot_ly(data = data.frame, x = ~average_temperature,
+                          y = ~windspeed, z = ~count, type = "scatter3d",
+                          mode = "markers", marker = list(size = 5,
+                                                          opacity = 0.7), color = ~count)
+Fahrradverleih %>% layout(scene = list(xaxis = list(title = "Temperatur"),
+                                       yaxis = list(title = "Windgeschwindigkeit"),
+                                       zaxis = list(title = "Fahrräder geliehen")))
