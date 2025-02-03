@@ -19,7 +19,8 @@
 
 \subsection{GitHub}
 
-Hier ist unser GitHub repository für den RStudio Code und LaTeX Code. \url{https://github.com/221Adam/AbgabeCOMET4349521}
+Hier ist unser GitHub repository für den RStudio Code und LaTeX Code. \url{https://github.com/221Adam/AbgabeCOMET4349521}. Kann sein, dass falls sie den LaTeX Code kopieren oder brauchen, Probleme mit den Bildern haben werden, aufgrund der Nummerierung habe ich manche umgenannt. Also von F17 auf F16. Die Daten im repository sind aber nicht umbenannt, sondern nur hier. :/
+Für diese Abgabe musste man RStudio benutzen \cite{RStudio}
 
 \subsection{Aufgabe 3.1}
 
@@ -252,5 +253,7 @@ Bei der letzten Aufgabe haben wir uns wie immer an den Code im Skript gehalten u
     \label{fig:enter-label}
 \end{figure}
 
+\bibliographystyle{plain}
+\bibliography{references}
 
 \end{document}
