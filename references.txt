@@ -1,0 +1,5 @@
+@misc{RStudio,
+    author = {{JJ Allaire}},
+    title = {{RStudio/R}},
+    howpublished = {\url{https://posit.co/download/rstudio-desktop/}]}
+}
